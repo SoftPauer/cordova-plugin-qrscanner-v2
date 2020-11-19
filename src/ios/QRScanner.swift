@@ -152,11 +152,29 @@ class QRScanner : CDVPlugin, AVCaptureMetadataOutputObjectsDelegate {
                 captureSession!.addInput(input)
                 metaOutput = AVCaptureMetadataOutput()
                 captureSession!.addOutput(metaOutput!)
+
+                // calculate a centered square rectangle with red border
+                let size = 150
+                let screenWidth = UIScreen.main.bounds.width
+                let screenHeight = UIScreen.main.bounds.height
+                let xPos = (CGFloat(screenWidth) / CGFloat(2)) - (CGFloat(size) / CGFloat(2))
+                let yPos = (CGFloat(screenHeight) / CGFloat(4)) - (CGFloat(size) / CGFloat(2))
+                let scanRect = CGRect(x: Int(xPos), y: Int(yPos), width: size, height: size)
+
+                // create UIView that will server as a red square to indicate where to place QRCode for scanning
+                let scanAreaView = UIView()
+                scanAreaView.layer.borderColor = UIColor.green.cgColor
+                scanAreaView.layer.borderWidth = 2
+                scanAreaView.frame = scanRect
+
+                self.webView!.superview!.insertSubview(scanAreaView, belowSubview: self.webView!)
                 metaOutput!.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
                 metaOutput!.metadataObjectTypes = [AVMetadataObject.ObjectType.qr]
+
                 captureVideoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession!)
                 cameraView.addPreviewLayer(captureVideoPreviewLayer)
                 captureSession!.startRunning()
+                metaOutput!.rectOfInterest = captureVideoPreviewLayer!.metadataOutputRectConverted(fromLayerRect: scanRect)
             }
             return true
         } catch CaptureError.backCameraUnavailable {
