@@ -13,6 +13,7 @@ import com.google.zxing.ResultPoint;
 import com.journeyapps.barcodescanner.BarcodeCallback;
 import com.journeyapps.barcodescanner.BarcodeResult;
 import com.journeyapps.barcodescanner.BarcodeView;
+import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 import com.journeyapps.barcodescanner.DefaultDecoderFactory;
 import com.journeyapps.barcodescanner.camera.CameraSettings;
 import org.apache.cordova.CallbackContext;
@@ -27,7 +28,6 @@ import android.provider.Settings;
 import androidx.core.app.ActivityCompat;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.util.DisplayMetrics;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -49,6 +49,7 @@ public class QRScanner extends CordovaPlugin implements BarcodeCallback {
     //Preview started or paused
     private boolean previewing = false;
     private BarcodeView  mBarcodeView;
+    private DecoratedBarcodeView  dBarcodeView;
     private boolean switchFlashOn = false;
     private boolean switchFlashOff = false;
     private boolean cameraPreviewing;
@@ -448,29 +449,25 @@ public class QRScanner extends CordovaPlugin implements BarcodeCallback {
         }
     }
     private void setupCamera(CallbackContext callbackContext) {
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        cordova.getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int height = displayMetrics.heightPixels / 2;
-        int width = displayMetrics.widthPixels;
-
         cordova.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 // Create our Preview view and set it as the content of our activity.
-                mBarcodeView = new BarcodeView(cordova.getActivity());
+                dBarcodeView = new DecoratedBarcodeView(cordova.getActivity());
+                mBarcodeView = dBarcodeView.getBarcodeView();
 
                 //Configure the decoder
                 ArrayList<BarcodeFormat> formatList = new ArrayList<BarcodeFormat>();
                 formatList.add(BarcodeFormat.QR_CODE);
-                mBarcodeView.setDecoderFactory(new DefaultDecoderFactory(formatList, null, null));
+                mBarcodeView.setDecoderFactory(new DefaultDecoderFactory(formatList, null, null, 0));
 
                 //Configure the camera (front/back)
                 CameraSettings settings = new CameraSettings();
                 settings.setRequestedCameraId(getCurrentCameraId());
                 mBarcodeView.setCameraSettings(settings);
 
-                FrameLayout.LayoutParams cameraPreviewParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, height);
-                ((ViewGroup) webView.getView().getParent()).addView(mBarcodeView, cameraPreviewParams);
+                FrameLayout.LayoutParams cameraPreviewParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+                ((ViewGroup) webView.getView().getParent()).addView(dBarcodeView, cameraPreviewParams);
 
                 cameraPreviewing = true;
                 webView.getView().bringToFront();

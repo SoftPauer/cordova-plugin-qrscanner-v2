@@ -1,12 +1,24 @@
 repositories {
     jcenter()
+    flatDir {
+        dirs 'src/main/libs'
+    }
 }
 
 dependencies {
-    compile 'com.journeyapps:zxing-android-embedded:3.3.0'
+    compile 'com.google.zxing:core:3.2.1'
+    compile (name:'zxing-android-embedded-debug', ext:'aar')
     compile 'com.android.support:appcompat-v7:23.1.0'
 }
 
 android {
     buildToolsVersion '23.0.2' // Older versions may give compile errors
+    packagingOptions {
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+    }
+
+    defaultConfig {
+       minSdkVersion 24
+    }
 }
