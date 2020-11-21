@@ -21,7 +21,7 @@
     </config-file>
     <source-file src="src/android/QRScanner.java" target-dir="src/com/bitpay/cordova/qrscanner"/>
     <framework src="src/android/qrscanner.gradle" custom="true" type="gradleReference"/>
-    <resource-file src="zxing-android-embedded/zxing-android-embedded-debug.aar" target="libs/zxing-android-embedded-debug.aar" />
+    <resource-file src="zxing-android-embedded/zxing-android-embedded-release.aar" target="libs/zxing-android-embedded-release.aar" />
   </platform>
   <platform name="ios">
     <config-file target="config.xml" parent="/*">
