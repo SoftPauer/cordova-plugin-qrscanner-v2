@@ -154,7 +154,6 @@ class QRScanner : CDVPlugin, AVCaptureMetadataOutputObjectsDelegate {
                 captureSession!.addOutput(metaOutput!)
 
                 // calculate a centered square rectangle with red border
-
                 let screenWidth = UIScreen.main.bounds.width
                 let screenHeight = UIScreen.main.bounds.height
                 let size = min(Int(CGFloat(screenWidth) / CGFloat(3.33)), Int(CGFloat(screenHeight) / CGFloat(3.33)))
@@ -162,13 +161,57 @@ class QRScanner : CDVPlugin, AVCaptureMetadataOutputObjectsDelegate {
                 let yPos = (CGFloat(screenHeight) / CGFloat(4)) - (CGFloat(size) / CGFloat(2))
                 let scanRect = CGRect(x: Int(xPos), y: Int(yPos), width: size, height: size)
 
+                //upper rectangle
+                let usize = (CGFloat(screenHeight) / CGFloat(4)) - (CGFloat(size) / CGFloat(2))
+                let uRect = CGRect(x: 0, y: 0, width: screenWidth, height: usize)
+
+                let uView = UIView()
+                uView.layer.backgroundColor = UIColor.black.cgColor
+                uView.layer.opacity = 0.4
+                uView.frame = uRect
+
+                self.webView!.superview!.insertSubview(uView, belowSubview: self.webView!)
+
+                //left rectangle
+                let lsize = (CGFloat(screenWidth) / CGFloat(2)) - (CGFloat(size) / CGFloat(2))
+                let lRect = CGRect(x: 0, y: yPos, width: lsize, height: screenHeight - yPos)
+
+                let lView = UIView()
+                lView.layer.backgroundColor = UIColor.black.cgColor
+                lView.layer.opacity = 0.4
+                lView.frame = lRect
+
+                self.webView!.superview!.insertSubview(lView, belowSubview: self.webView!)
+
+                //right rectangle
+                let rsize = (CGFloat(screenWidth) / CGFloat(2)) - (CGFloat(size) / CGFloat(2))
+                let rRect = CGRect(x: xPos + CGFloat(size), y: yPos, width: rsize, height: screenHeight - yPos)
+
+                let rView = UIView()
+                rView.layer.backgroundColor = UIColor.black.cgColor
+                rView.layer.opacity = 0.4
+                rView.frame = rRect
+
+                self.webView!.superview!.insertSubview(rView, belowSubview: self.webView!)
+
+                //bottom rectangle
+                let bRect = CGRect(x: xPos, y: yPos + CGFloat(size), width: CGFloat(size), height: screenHeight - yPos - CGFloat(size))
+
+                let bView = UIView()
+                bView.layer.backgroundColor = UIColor.black.cgColor
+                bView.layer.opacity = 0.4
+                bView.frame = bRect
+
+                self.webView!.superview!.insertSubview(bView, belowSubview: self.webView!)
+
                 // create UIView that will server as a red square to indicate where to place QRCode for scanning
-                let scanAreaView = UIView()
+                /*let scanAreaView = UIView()
                 scanAreaView.layer.borderColor = UIColor.green.cgColor
                 scanAreaView.layer.borderWidth = 2
                 scanAreaView.frame = scanRect
 
-                self.webView!.superview!.insertSubview(scanAreaView, belowSubview: self.webView!)
+                self.webView!.superview!.insertSubview(scanAreaView, belowSubview: self.webView!)*/
+                
                 metaOutput!.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
                 metaOutput!.metadataObjectTypes = [AVMetadataObject.ObjectType.qr]
 
