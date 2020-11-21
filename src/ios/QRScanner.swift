@@ -154,9 +154,10 @@ class QRScanner : CDVPlugin, AVCaptureMetadataOutputObjectsDelegate {
                 captureSession!.addOutput(metaOutput!)
 
                 // calculate a centered square rectangle with red border
-                let size = 150
+
                 let screenWidth = UIScreen.main.bounds.width
                 let screenHeight = UIScreen.main.bounds.height
+                let size = min(Int(CGFloat(screenWidth) / CGFloat(3.33)), Int(CGFloat(screenHeight) / CGFloat(3.33)))
                 let xPos = (CGFloat(screenWidth) / CGFloat(2)) - (CGFloat(size) / CGFloat(2))
                 let yPos = (CGFloat(screenHeight) / CGFloat(4)) - (CGFloat(size) / CGFloat(2))
                 let scanRect = CGRect(x: Int(xPos), y: Int(yPos), width: size, height: size)
