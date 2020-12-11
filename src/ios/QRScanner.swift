@@ -156,7 +156,7 @@ class QRScanner : CDVPlugin, AVCaptureMetadataOutputObjectsDelegate {
                 // calculate a centered square rectangle with red border
                 let screenWidth = UIScreen.main.bounds.width
                 let screenHeight = UIScreen.main.bounds.height
-                let size = min(Int(CGFloat(screenWidth) / CGFloat(3.33)), Int(CGFloat(screenHeight) / CGFloat(3.33)))
+                let size = min(Int(CGFloat(screenWidth) / CGFloat(2.5)), Int(CGFloat(screenHeight) / CGFloat(2.5)))
                 let xPos = (CGFloat(screenWidth) / CGFloat(2)) - (CGFloat(size) / CGFloat(2))
                 let yPos = (CGFloat(screenHeight) / CGFloat(4)) - (CGFloat(size) / CGFloat(2))
                 let scanRect = CGRect(x: Int(xPos), y: Int(yPos), width: size, height: size)
@@ -211,7 +211,7 @@ class QRScanner : CDVPlugin, AVCaptureMetadataOutputObjectsDelegate {
                 scanAreaView.frame = scanRect
 
                 self.webView!.superview!.insertSubview(scanAreaView, belowSubview: self.webView!)*/
-                
+
                 metaOutput!.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
                 metaOutput!.metadataObjectTypes = [AVMetadataObject.ObjectType.qr]
 
